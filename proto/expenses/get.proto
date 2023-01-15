@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package expenses;
 
-option go_package = "github.com/rubengomes8/golang-personal-finances/proto/expenses";
+option go_package = "github.com/rubengomes8/golang-personal-finances-client/proto/expenses";
 
 message ExpenseGetResponse {
     int64 id = 1;

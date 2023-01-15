@@ -26,45 +26,15 @@ func main() {
 	// cCards := cards.NewCardServiceClient(conn)
 
 	cExpenses := expenses.NewExpensesServiceClient(conn)
-	// nowUnixDate := time.Now().UTC().Unix()
-	// expensesclient.CreateExpense(
-	// 	cExpenses,
-	// 	expenses.ExpenseCreateRequest{
-	// 		Value:       10,
-	// 		Date:        nowUnixDate,
-	// 		Category:    "House",
-	// 		SubCategory: "Rent",
-	// 		Card:        "CGD",
-	// 		Description: "TEST",
-	// 	},
-	// )
-	// time.Sleep(500 * time.Millisecond)
 
-	// expensesclient.CreateExpense(
-	// 	cExpenses,
-	// 	expenses.ExpenseCreateRequest{
-	// 		Value:       20,
-	// 		Date:        nowUnixDate,
-	// 		Category:    "Laser",
-	// 		SubCategory: "Restaurants",
-	// 		Card:        "Food allowance",
-	// 		Description: "TEST",
-	// 	},
-	// )
-	// time.Sleep(500 * time.Millisecond)
+	restaurantExpense := createTextExpense(50.0, "Laser", "Restaurants", "Food allowance")
+	_ = client.CreateExpense(cExpenses, &restaurantExpense)
 
-	// expensesclient.CreateExpense(
-	// 	cExpenses,
-	// 	expenses.ExpenseCreateRequest{
-	// 		Value:       30,
-	// 		Date:        nowUnixDate,
-	// 		Category:    "Laser",
-	// 		SubCategory: "Rent",
-	// 		Card:        "Food allowance",
-	// 		Description: "INVALID TEST",
-	// 	},
-	// )
-	// time.Sleep(500 * time.Millisecond)
+	houseExpense := createTextExpense(200.0, "House", "Rent", "CGD")
+	houseExpenseId := client.CreateExpense(cExpenses, &houseExpense)
+
+	houseExpenseUpdate := updateTextExpense(houseExpenseId, 250.0, "House", "Rent", "CGD")
+	_ = client.UpdateExpense(cExpenses, &houseExpenseUpdate)
 
 	card := expenses.ExpensesGetRequestByCard{
 		Card: "CGD",
@@ -80,4 +50,27 @@ func main() {
 
 	// client.GetExpensesByDate(c)
 	// time.Sleep(500 * time.Millisecond)
+}
+
+func createTextExpense(value float64, category, subCategory, card string) expenses.ExpenseCreateRequest {
+	return expenses.ExpenseCreateRequest{
+		Value:       value,
+		Date:        time.Now().UTC().Unix(),
+		Category:    category,
+		SubCategory: subCategory,
+		Card:        card,
+		Description: "TEST",
+	}
+}
+
+func updateTextExpense(id int64, value float64, category, subCategory, card string) expenses.ExpenseUpdateRequest {
+	return expenses.ExpenseUpdateRequest{
+		Id:          id,
+		Value:       value,
+		Date:        time.Now().UTC().Unix(),
+		Category:    category,
+		SubCategory: subCategory,
+		Card:        card,
+		Description: "TEST",
+	}
 }

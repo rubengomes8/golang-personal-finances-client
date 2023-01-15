@@ -44,10 +44,13 @@ expenses-create:
 expenses-get:
 	protoc --proto_path=. --go_out=. --go_opt=module=${GO_MODULE} --go-grpc_out=. --go-grpc_opt=module=${GO_MODULE} proto/expenses/get.proto
 
+expenses-update:
+	protoc --proto_path=. --go_out=. --go_opt=module=${GO_MODULE} --go-grpc_out=. --go-grpc_opt=module=${GO_MODULE} proto/expenses/update.proto
+
 expenses-service:
 	protoc --proto_path=. --go_out=. --go_opt=module=${GO_MODULE} --go-grpc_out=. --go-grpc_opt=module=${GO_MODULE} proto/expenses/service.proto
 
-expenses: expenses-create expenses-get expenses-service
+expenses: expenses-create expenses-get expenses-update expenses-service
 
 # ALL
 all: cards expense_categories expense_subcategories expenses 

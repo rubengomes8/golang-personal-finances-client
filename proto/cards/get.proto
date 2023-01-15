@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package cards;
 
-option go_package = "github.com/rubengomes8/golang-personal-finances/proto/cards";
+option go_package = "github.com/rubengomes8/golang-personal-finances-client/proto/cards";
 
 message CardGetRequestByName {
     string name = 1;

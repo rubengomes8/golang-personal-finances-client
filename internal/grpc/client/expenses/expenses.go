@@ -7,7 +7,7 @@ import (
 	"github.com/rubengomes8/golang-personal-finances-client/proto/expenses"
 )
 
-func CreateExpense(serviceClient expenses.ExpensesServiceClient, expense *expenses.ExpenseCreateRequest) {
+func CreateExpense(serviceClient expenses.ExpensesServiceClient, expense *expenses.ExpenseCreateRequest) int64 {
 
 	log.Println("CreateExpense was invoked")
 
@@ -17,33 +17,15 @@ func CreateExpense(serviceClient expenses.ExpensesServiceClient, expense *expens
 	}
 
 	log.Printf("Requested create expense with ID: %d\n", res.Id)
+	return res.Id
 }
 
 func CreateExpenses(serviceClient expenses.ExpensesServiceClient) {
 
+	// TODO
 	log.Println("CreateExpenses was invoked")
 
-	expenses := expenses.ExpensesCreateRequest{
-
-		Expenses: []*expenses.ExpenseCreateRequest{
-			{
-				Value:       3,
-				Date:        1,
-				Category:    "House",
-				SubCategory: "Rent",
-				Card:        "CGD",
-				Description: "TEST",
-			},
-			{
-				Value:       4,
-				Date:        2,
-				Category:    "House",
-				SubCategory: "Rent",
-				Card:        "CGD",
-				Description: "TEST",
-			},
-		},
-	}
+	expenses := expenses.ExpensesCreateRequest{}
 
 	res, err := serviceClient.CreateExpenses(context.Background(), &expenses)
 	if err != nil {
@@ -51,6 +33,19 @@ func CreateExpenses(serviceClient expenses.ExpensesServiceClient) {
 	}
 
 	log.Printf("Requested create expenses with IDs: %v\n", res.Ids)
+}
+
+func UpdateExpense(serviceClient expenses.ExpensesServiceClient, expense *expenses.ExpenseUpdateRequest) int64 {
+
+	log.Println("UpdateExpense was invoked")
+
+	res, err := serviceClient.UpdateExpense(context.Background(), expense)
+	if err != nil {
+		log.Fatalf("client could not request for update expense: %v\n", err)
+	}
+
+	log.Printf("Requested update expense with ID: %d\n", res.Id)
+	return res.Id
 }
 
 func GetExpensesByCard(serviceClient expenses.ExpensesServiceClient, card *expenses.ExpensesGetRequestByCard) {

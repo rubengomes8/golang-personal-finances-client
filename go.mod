@@ -3,7 +3,6 @@ module github.com/rubengomes8/golang-personal-finances-client
 go 1.17
 
 require (
-	github.com/rubengomes8/golang-personal-finances v0.0.0-20230114193558-6f99d49c9383
 	google.golang.org/grpc v1.52.0
 	google.golang.org/protobuf v1.28.1
 )
