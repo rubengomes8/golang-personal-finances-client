@@ -4,7 +4,7 @@ import (
 	"context"
 	"log"
 
-	"github.com/rubengomes8/golang-personal-finances-client/proto/cards"
+	"github.com/rubengomes8/golang-personal-finances-client/internal/pb/cards"
 )
 
 func CreateCard(serviceClient cards.CardServiceClient) {

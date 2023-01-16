@@ -9,7 +9,7 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 
 	client "github.com/rubengomes8/golang-personal-finances-client/internal/grpc/client/expenses"
-	"github.com/rubengomes8/golang-personal-finances-client/proto/expenses"
+	"github.com/rubengomes8/golang-personal-finances-client/internal/pb/expenses"
 )
 
 const ADDR = "0.0.0.0:50051"
