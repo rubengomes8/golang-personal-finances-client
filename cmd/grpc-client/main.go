@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"time"
 
@@ -27,35 +28,86 @@ func main() {
 
 	cExpenses := expenses.NewExpensesServiceClient(conn)
 
-	restaurantExpense := createTextExpense(50.0, "Laser", "Restaurants", "Food allowance")
-	_ = client.CreateExpense(cExpenses, &restaurantExpense)
+	// --------------------------
+	fmt.Println()
+	restaurantExpense := createTextExpense(50.0, "Laser", "Restaurants", "Food allowance", time.Now().UTC().Unix())
+	_, err = client.CreateExpense(cExpenses, &restaurantExpense)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	houseExpense := createTextExpense(200.0, "House", "Rent", "CGD")
-	houseExpenseId := client.CreateExpense(cExpenses, &houseExpense)
+	// --------------------------
+	fmt.Println()
+	houseExpenseDate := time.Now().UTC().Add(72 * time.Hour).Unix()
+	houseExpense := createTextExpense(200.0, "House", "Rent", "CGD", houseExpenseDate)
+	houseExpenseId, err := client.CreateExpense(cExpenses, &houseExpense)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	houseExpenseUpdate := updateTextExpense(houseExpenseId, 250.0, "House", "Rent", "CGD")
-	_ = client.UpdateExpense(cExpenses, &houseExpenseUpdate)
+	// --------------------------
+	fmt.Println()
+	houseExpenseUpdate := updateTextExpense(houseExpenseId, 250.0, "House", "Rent", "CGD", houseExpenseDate)
+	_, err = client.UpdateExpense(cExpenses, &houseExpenseUpdate)
+	if err != nil {
+		log.Fatal(err)
+	}
 
+	// --------------------------
+	fmt.Println()
 	card := expenses.ExpensesGetRequestByCard{
 		Card: "CGD",
 	}
-	client.GetExpensesByCard(cExpenses, &card)
-	time.Sleep(500 * time.Millisecond)
+	expensesGetByCard, err := client.GetExpensesByCard(cExpenses, &card) // SHOULD RETURN CGD
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(expensesGetByCard.Expenses)
 
-	// client.GetExpensesByCategory(c)
-	// time.Sleep(500 * time.Millisecond)
+	// --------------------------
+	fmt.Println()
+	expCategory := expenses.ExpensesGetRequestByCategory{
+		Category: "House",
+	}
+	expensesGetByCategory, err := client.GetExpensesByCategory(cExpenses, &expCategory) // SHOULD RETURN RENT
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(expensesGetByCategory.Expenses)
 
-	// client.GetExpensesBySubCategory(c)
-	// time.Sleep(500 * time.Millisecond)
+	// --------------------------
+	fmt.Println()
+	expSubCategory := expenses.ExpensesGetRequestBySubCategory{
+		SubCategory: "Restaurants",
+	}
+	expensesGetBySubCategory, err := client.GetExpensesBySubCategory(cExpenses, &expSubCategory) // SHOULD RETURN RESTAURANTS
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(expensesGetBySubCategory.Expenses)
 
-	// client.GetExpensesByDate(c)
-	// time.Sleep(500 * time.Millisecond)
+	// --------------------------
+	fmt.Println()
+	minDateUnix := time.Now().UTC().Add(70 * time.Hour).Unix()
+	maxDateUnix := time.Now().UTC().Add(74 * time.Hour).Unix()
+	fmt.Printf("minDateUnix: %v\n", minDateUnix)
+	fmt.Printf("maxDateUnix: %v\n", maxDateUnix)
+	expDate := expenses.ExpensesGetRequestByDate{
+		MinDate: time.Now().UTC().Add(70 * time.Hour).Unix(),
+		MaxDate: time.Now().UTC().Add(74 * time.Hour).Unix(),
+	}
+	expensesGetByDate, err := client.GetExpensesByDate(cExpenses, &expDate) // SHOULD RETURN RESTAURANTS
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(expensesGetByDate.Expenses)
+
 }
 
-func createTextExpense(value float64, category, subCategory, card string) expenses.ExpenseCreateRequest {
+func createTextExpense(value float64, category, subCategory, card string, expenseDate int64) expenses.ExpenseCreateRequest {
 	return expenses.ExpenseCreateRequest{
 		Value:       value,
-		Date:        time.Now().UTC().Unix(),
+		Date:        expenseDate,
 		Category:    category,
 		SubCategory: subCategory,
 		Card:        card,
@@ -63,11 +115,11 @@ func createTextExpense(value float64, category, subCategory, card string) expens
 	}
 }
 
-func updateTextExpense(id int64, value float64, category, subCategory, card string) expenses.ExpenseUpdateRequest {
+func updateTextExpense(id int64, value float64, category, subCategory, card string, expenseDate int64) expenses.ExpenseUpdateRequest {
 	return expenses.ExpenseUpdateRequest{
 		Id:          id,
 		Value:       value,
-		Date:        time.Now().UTC().Unix(),
+		Date:        expenseDate,
 		Category:    category,
 		SubCategory: subCategory,
 		Card:        card,

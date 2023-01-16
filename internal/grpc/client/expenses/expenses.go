@@ -2,25 +2,26 @@ package client
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"github.com/rubengomes8/golang-personal-finances-client/proto/expenses"
 )
 
-func CreateExpense(serviceClient expenses.ExpensesServiceClient, expense *expenses.ExpenseCreateRequest) int64 {
+func CreateExpense(serviceClient expenses.ExpensesServiceClient, expense *expenses.ExpenseCreateRequest) (int64, error) {
 
 	log.Println("CreateExpense was invoked")
 
 	res, err := serviceClient.CreateExpense(context.Background(), expense)
 	if err != nil {
-		log.Fatalf("client could not request for create expense: %v\n", err)
+		return 0, fmt.Errorf("client could not request for create expense: %v", err)
 	}
 
 	log.Printf("Requested create expense with ID: %d\n", res.Id)
-	return res.Id
+	return res.Id, nil
 }
 
-func CreateExpenses(serviceClient expenses.ExpensesServiceClient) {
+func CreateExpenses(serviceClient expenses.ExpensesServiceClient) ([]int64, error) {
 
 	// TODO
 	log.Println("CreateExpenses was invoked")
@@ -29,82 +30,73 @@ func CreateExpenses(serviceClient expenses.ExpensesServiceClient) {
 
 	res, err := serviceClient.CreateExpenses(context.Background(), &expenses)
 	if err != nil {
-		log.Fatalf("client could not request for create expenses: %v\n", err)
+		return []int64{}, fmt.Errorf("client could not request for create expenses: %v", err)
 	}
 
-	log.Printf("Requested create expenses with IDs: %v\n", res.Ids)
+	var ids []int64
+	for _, resId := range res.Ids {
+		ids = append(ids, resId.Id)
+	}
+
+	return ids, nil
 }
 
-func UpdateExpense(serviceClient expenses.ExpensesServiceClient, expense *expenses.ExpenseUpdateRequest) int64 {
+func UpdateExpense(serviceClient expenses.ExpensesServiceClient, expense *expenses.ExpenseUpdateRequest) (int64, error) {
 
 	log.Println("UpdateExpense was invoked")
 
 	res, err := serviceClient.UpdateExpense(context.Background(), expense)
 	if err != nil {
-		log.Fatalf("client could not request for update expense: %v\n", err)
+		return 0, fmt.Errorf("client could not request for update expense: %v", err)
 	}
 
-	log.Printf("Requested update expense with ID: %d\n", res.Id)
-	return res.Id
+	return res.Id, nil
 }
 
-func GetExpensesByCard(serviceClient expenses.ExpensesServiceClient, card *expenses.ExpensesGetRequestByCard) {
+func GetExpensesByCard(serviceClient expenses.ExpensesServiceClient, cardReq *expenses.ExpensesGetRequestByCard) (*expenses.ExpensesGetResponse, error) {
 
 	log.Println("GetExpensesByCard was invoked")
 
-	res, err := serviceClient.GetExpensesByCard(context.Background(), card)
+	res, err := serviceClient.GetExpensesByCard(context.Background(), cardReq)
 	if err != nil {
-		log.Fatalf("client could not request a get expense by card: %v\n", err)
+		return &expenses.ExpensesGetResponse{}, fmt.Errorf("client could not request a get expense by card: %v", err)
 	}
 
-	log.Printf("Requested get expenses by card: %v\n", res.Expenses)
+	return res, nil
 }
 
-func GetExpensesByCategory(serviceClient expenses.ExpensesServiceClient) {
+func GetExpensesByCategory(serviceClient expenses.ExpensesServiceClient, categoryReq *expenses.ExpensesGetRequestByCategory) (*expenses.ExpensesGetResponse, error) {
 
 	log.Println("GetExpensesByCategory was invoked")
 
-	expense := expenses.ExpensesGetRequestByCategory{
-		Category: "House",
-	}
-
-	res, err := serviceClient.GetExpensesByCategory(context.Background(), &expense)
+	res, err := serviceClient.GetExpensesByCategory(context.Background(), categoryReq)
 	if err != nil {
-		log.Fatalf("client could not request a get expense by category: %v\n", err)
+		return &expenses.ExpensesGetResponse{}, fmt.Errorf("client could not request a get expense by category: %v", err)
 	}
 
-	log.Printf("Requested get expenses by category: %v\n", res.Expenses)
+	return res, nil
 }
 
-func GetExpensesBySubCategory(serviceClient expenses.ExpensesServiceClient) {
+func GetExpensesBySubCategory(serviceClient expenses.ExpensesServiceClient, subCategoryReq *expenses.ExpensesGetRequestBySubCategory) (*expenses.ExpensesGetResponse, error) {
 
 	log.Println("GetExpensesBySubCategory was invoked")
 
-	expense := expenses.ExpensesGetRequestBySubCategory{
-		SubCategory: "Rent",
-	}
-
-	res, err := serviceClient.GetExpensesBySubCategory(context.Background(), &expense)
+	res, err := serviceClient.GetExpensesBySubCategory(context.Background(), subCategoryReq)
 	if err != nil {
-		log.Fatalf("client could not request a get expense by subcategory: %v\n", err)
+		return &expenses.ExpensesGetResponse{}, fmt.Errorf("client could not request a get expense by subcategory: %v", err)
 	}
 
-	log.Printf("Requested get expenses by subcategory: %v\n", res.Expenses)
+	return res, nil
 }
 
-func GetExpensesByDate(serviceClient expenses.ExpensesServiceClient) {
+func GetExpensesByDate(serviceClient expenses.ExpensesServiceClient, datesReq *expenses.ExpensesGetRequestByDate) (*expenses.ExpensesGetResponse, error) {
 
 	log.Println("GetExpensesByDate was invoked")
 
-	expense := expenses.ExpensesGetRequestByDate{
-		MinDate: 1,
-		MaxDate: 1000,
-	}
-
-	res, err := serviceClient.GetExpensesByDate(context.Background(), &expense)
+	res, err := serviceClient.GetExpensesByDate(context.Background(), datesReq)
 	if err != nil {
-		log.Fatalf("client could not request a get expense by date: %v\n", err)
+		return &expenses.ExpensesGetResponse{}, fmt.Errorf("client could not request a get expense by date: %v", err)
 	}
 
-	log.Printf("Requested get expenses by date: %v\n", res.Expenses)
+	return res, nil
 }
