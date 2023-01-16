@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package cards;
 
-option go_package = "github.com/rubengomes8/golang-personal-finances-client";
+option go_package = "github.com/rubengomes8/golang-personal-finances-client/internal/pb/cards";
 
 
 /* CREATE CARD */

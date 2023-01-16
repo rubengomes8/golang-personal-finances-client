@@ -4,7 +4,7 @@ import (
 	"context"
 	"log"
 
-	categories "github.com/rubengomes8/golang-personal-finances-client/proto/expense_categories"
+	"github.com/rubengomes8/golang-personal-finances-client/internal/pb/expenses/categories"
 )
 
 func CreateCategory(serviceClient categories.ExpenseCategoryServiceClient) {

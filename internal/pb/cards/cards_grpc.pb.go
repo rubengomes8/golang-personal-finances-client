@@ -4,7 +4,7 @@
 // - protoc             v3.21.12
 // source: cards.proto
 
-package golang_personal_finances_client
+package cards
 
 import (
 	context "context"

@@ -4,7 +4,7 @@
 // - protoc             v3.21.12
 // source: expense_categories.proto
 
-package golang_personal_finances_client
+package categories
 
 import (
 	context "context"

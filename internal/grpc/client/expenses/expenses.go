@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/rubengomes8/golang-personal-finances-client/proto/expenses"
+	"github.com/rubengomes8/golang-personal-finances-client/internal/pb/expenses"
 )
 
 func CreateExpense(serviceClient expenses.ExpensesServiceClient, expense *expenses.ExpenseCreateRequest) (int64, error) {
