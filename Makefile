@@ -9,7 +9,6 @@ cards:
 expense_categories:
 	protoc --proto_path=./proto --go_out=. --go_opt=module=${GO_MODULE} --go-grpc_out=. --go-grpc_opt=module=${GO_MODULE} expense_categories.proto
 
-
 # EXPENSES SUB CATEGORIES #
 expense_subcategories:
 	protoc --proto_path=./proto --go_out=. --go_opt=module=${GO_MODULE} --go-grpc_out=. --go-grpc_opt=module=${GO_MODULE} expense_subcategories.proto
